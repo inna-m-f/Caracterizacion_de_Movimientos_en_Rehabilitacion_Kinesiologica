@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KinePose · Panel clínico</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#eef2f3;--sf:#fff;--ink:#13272c;--mu:#5a7177;--ln:#d2dde0;--ac:#0e6f7c;--acx:#fff;--A:#2b8fb3;--B:#e4572e;--ok:#1b7f55;--okb:#dff3ea;--wb:#fde6df;--w:#b23d1a;--nb:#e6ecee;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b171a;--sf:#132529;--ink:#e5f0f2;--mu:#8ca6ac;--ln:#27414a;--ac:#4cc3d1;--acx:#08181b;--A:#5cc3e8;--B:#ff8a63;--ok:#4cd694;--okb:#143a2b;--wb:#432119;--w:#ff9b7a;--nb:#1d333a}}
+:root[data-theme="dark"]{--bg:#0b171a;--sf:#132529;--ink:#e5f0f2;--mu:#8ca6ac;--ln:#27414a;--ac:#4cc3d1;--acx:#08181b;--A:#5cc3e8;--B:#ff8a63;--ok:#4cd694;--okb:#143a2b;--wb:#432119;--w:#ff9b7a;--nb:#1d333a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.side{background:var(--sf);border-right:1px solid var(--ln);padding:18px 12px;position:sticky;top:0;align-self:start;height:100vh}
+.brand{font-weight:700;font-size:19px;display:flex;gap:10px;align-items:center;padding:0 8px 18px}
+.brand i{width:26px;height:26px;border-radius:8px;background:var(--ac);display:grid;place-items:center}
+.brand i:after{content:"";width:10px;height:10px;border-radius:50%;border:3px solid var(--acx)}
+.side button.nv{display:block;width:100%;text-align:left;font:inherit;font-weight:500;padding:10px 12px;border:0;background:none;color:var(--ink);border-radius:8px;cursor:pointer;margin-bottom:2px}
+.side button.nv[aria-current=page]{background:var(--ac);color:var(--acx);font-weight:600}
+.usr{position:absolute;bottom:18px;left:20px;right:12px;font-size:13px;color:var(--mu)}.usr b{display:block;color:var(--ink)}
+main{padding:24px;max-width:1080px;width:100%}
+h1{font-size:24px;margin:0 0 2px;letter-spacing:-.01em}
+.sub{color:var(--mu);margin:0 0 18px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:16px}
+h2{font-size:16px;margin:0 0 10px}
+.v{display:none}.v.on{display:block}
+button.b,a.b{font:inherit;font-weight:600;border:0;background:var(--ac);color:var(--acx);padding:9px 16px;border-radius:8px;cursor:pointer}
+button.g{font:inherit;font-weight:600;border:1.5px solid var(--ln);background:var(--sf);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,tr[tabindex]:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+input[type=text],input[type=search],select,textarea{font:inherit;width:100%;padding:9px 11px;border:1.5px solid var(--ln);border-radius:8px;background:var(--sf);color:var(--ink)}
+label.f{display:block;font-weight:600;font-size:13.5px;margin-bottom:12px}label.f>*:last-child{margin-top:5px;font-weight:400}
+.two{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:16px;align-items:start}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:10px 8px;text-align:left;border-top:1px solid var(--ln);font-size:14px}
+th{font-size:12.5px;color:var(--mu);font-weight:600;border-top:0}
+tbody tr.pr{cursor:pointer}tbody tr.pr:hover,tbody tr.sel{background:var(--bg)}
+td small{display:block;color:var(--mu);font-size:12.5px}
+.chip{display:inline-block;font-size:12.5px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--nb)}
+.chip.ok{background:var(--okb);color:var(--ok)}.chip.w{background:var(--wb);color:var(--w)}
+canvas{display:block;width:100%;height:auto}
+#cmpc{background:#0c1a1e;border-radius:10px}
+.bar{display:flex;gap:12px;align-items:center;margin-top:10px}
+.bar input[type=range]{flex:1;accent-color:var(--ac)}.bar span{color:var(--mu);font-size:13px;min-width:44px;text-align:right}
+.seg{display:inline-flex;border:1.5px solid var(--ln);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;border:0;background:var(--sf);color:var(--ink);padding:7px 12px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--ac);color:var(--acx);font-weight:600}
+.drop{border:2px dashed var(--ln);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;margin-bottom:14px;background:var(--bg)}
+.drop:hover,.drop.dz{border-color:var(--ac)}
+.drop b{display:block;font-size:16px}.drop small{color:var(--mu)}
+.prog{height:10px;background:var(--ln);border-radius:9px;overflow:hidden;margin:8px 0}
+.prog i{display:block;height:100%;width:0;background:var(--ac);transition:width .3s}
+.steps li{padding:5px 0;color:var(--mu)}.steps li.d{color:var(--ok)}.steps li.d:before{content:"✓ "}.steps li.c{color:var(--ink);font-weight:600}
+.steps{list-style:none;padding:0;margin:10px 0}
+.chk label{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--ln);cursor:pointer}.chk label:first-child{border-top:0}
+.chk input{accent-color:var(--ac);width:16px;height:16px;margin-top:4px}
+.chk small{display:block;color:var(--mu);font-size:12.5px}
+.kv{display:flex;gap:18px;flex-wrap:wrap;color:var(--mu);font-size:14px;margin-bottom:12px}.kv b{color:var(--ink)}
+.sl{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--ln);font-size:14px}
+.sl .n{flex:1}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:9px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+.sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.sum{padding:12px;border-radius:8px;background:var(--bg);margin:12px 0;font-size:14px}
+@media (max-width:860px){.shell{grid-template-columns:1fr}.side{position:static;height:auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px}.brand{padding:0 8px 0 0}.side button.nv{width:auto;margin:0}.usr{display:none}.two,.row3{grid-template-columns:1fr}main{padding:16px}.hm{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="side">
+  <div class="brand"><i></i>KinePose</div>
+  <button class="nv" data-v="pacientes">Pacientes</button>
+  <button class="nv" data-v="nueva">Nueva sesión</button>
+  <button class="nv" data-v="comparador">Comparador</button>
+  <div class="usr"><b>Kgo. Andrea Lagos</b>Centro de rehabilitación</div>
+</aside>
+<main>
+
+<section class="v" id="v-pacientes">
+  <h1>Pacientes</h1><p class="sub">Historial de sesiones y progreso de cada paciente.</p>
+  <div class="two">
+    <div class="card">
+      <input type="search" id="q" placeholder="Buscar por nombre, RUT o diagnóstico" aria-label="Buscar paciente" style="margin-bottom:8px">
+      <table><thead><tr><th>Paciente</th><th class="hm">Diagnóstico</th><th>Sesiones</th><th>Evolución</th></tr></thead><tbody id="pt"></tbody></table>
+    </div>
+    <div class="card" id="pd"></div>
+  </div>
+</section>
+
+<section class="v" id="v-nueva">
+  <h1>Nueva sesión</h1><p class="sub">Carga el video de la sesión y el sistema lo analiza.</p>
+  <div class="two">
+    <div class="card">
+      <div class="row3" style="grid-template-columns:1fr 1fr">
+        <label class="f">Paciente<select id="np"></select></label>
+        <label class="f">Ejercicio<select><option>Sentadilla</option><option>Elevación de pierna recta</option><option>Flexión de rodilla sentado</option></select></label>
+      </div>
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Cargar video">
+        <b id="dn">Arrastra el video aquí o haz clic para elegirlo</b><small id="ds">MP4 o MOV · hasta 500 MB · 1080p recomendado</small>
+        <input type="file" id="fi" accept="video/*" hidden>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="b" id="go">Procesar video</button><button class="g" id="ex">Usar video de ejemplo</button></div>
+      <div id="pg" style="display:none;margin-top:16px">
+        <div class="prog"><i id="pb"></i></div>
+        <ul class="steps" id="st"><li>Separar al paciente del fondo</li><li>Detectar articulaciones</li><li>Seguir el movimiento cuadro a cuadro</li><li>Guardar en el historial</li></ul>
+        <div id="done" style="display:none"><span class="chip ok">Sesión guardada</span> <button class="b" id="seeC" style="margin-left:8px">Ver en el comparador</button></div>
+      </div>
+    </div>
+    <div class="card chk"><h2>Protocolo de captura</h2>
+      <label><input type="checkbox" checked><span>Plano sagital<small>El paciente de perfil a la cámara.</small></span></label>
+      <label><input type="checkbox" checked><span>Cuerpo completo visible<small>De la cabeza a los pies.</small></span></label>
+      <label><input type="checkbox" checked><span>Cámara fija a 3 m<small>A la altura de la cadera, sin zoom.</small></span></label>
+      <label><input type="checkbox" checked><span>Fondo despejado<small>Sin personas ni objetos detrás.</small></span></label>
+      <label><input type="checkbox"><span>Iluminación frontal pareja<small>Evita ventanas a un costado.</small></span></label>
+    </div>
+  </div>
+</section>
+
+<section class="v" id="v-comparador">
+  <h1>Comparador de sesiones</h1><p class="sub">Observa cómo cambió el movimiento entre dos sesiones.</p>
+  <div class="card" style="margin-bottom:16px"><div class="row3">
+    <label class="f" style="margin:0">Paciente<select id="cp"></select></label>
+    <label class="f" style="margin:0"><span class="sw" style="background:var(--A)"></span>Sesión base<select id="sa"></select></label>
+    <label class="f" style="margin:0"><span class="sw" style="background:var(--B)"></span>Sesión a comparar<select id="sb"></select></label>
+  </div></div>
+  <div class="two">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div class="seg" role="group" aria-label="Modo de vista"><button id="m1" aria-pressed="true">Lado a lado</button><button id="m2" aria-pressed="false">Superpuesto</button></div>
+        <label style="font-size:14px;cursor:pointer"><input type="checkbox" id="ghost" checked style="accent-color:var(--ac)"> Mostrar líneas guía</label>
+      </div>
+      <canvas id="cmpc" width="900" height="420" aria-label="Comparación visual de dos sesiones"></canvas>
+      <div class="bar"><button class="b" id="play" style="min-width:96px">Pausar</button><input type="range" id="seek" min="0" max="1000" value="0" aria-label="Avance de la repetición"><span id="pct">0 %</span></div>
+    </div>
+    <div class="card">
+      <h2>Resultados</h2>
+      <table><thead><tr><th>Medida</th><th>Base</th><th>Nueva</th><th>Cambio</th></tr></thead><tbody id="mt"></tbody></table>
+      <div class="sum" id="sum"></div>
+      <canvas id="chart" width="360" height="160" aria-label="Flexión de rodilla en la repetición"></canvas>
+      <label class="f" style="margin-top:12px">Observaciones clínicas<textarea rows="3" id="obs" placeholder="Escribe tus notas sobre esta comparación"></textarea></label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="b" id="sv">Guardar nota</button><button class="g" id="rp">Exportar informe</button></div>
+    </div>
+  </div>
+</section>
+</main></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),R=Math.PI/180;
+const PT=[
+{id:0,n:'María Fernández',r:'12.345.678-5',e:54,dx:'Postoperatorio de artroplastia de rodilla',s:[[ '22 sep',.58,.8,4.2],['6 oct',.7,.65,3.9],['20 oct',.82,.55,3.5],['3 nov',.9,.45,3.2]]},
+{id:1,n:'Carlos Soto',r:'15.882.301-K',e:38,dx:'Esguince de LCA grado II',s:[['29 sep',.65,.6,3.8],['13 oct',.78,.5,3.5],['27 oct',.86,.45,3.3]]},
+{id:2,n:'Valentina Rojas',r:'19.204.775-3',e:27,dx:'Tendinopatía rotuliana',s:[['15 oct',.72,.5,3.4],['29 oct',.8,.48,3.2]]},
+{id:3,n:'Jorge Muñoz',r:'8.911.456-1',e:61,dx:'Gonartrosis',s:[['1 oct',.5,.75,4.4],['15 oct',.55,.72,4.3],['29 oct',.52,.78,4.5]]},
+{id:4,n:'Camila Araya',r:'18.530.992-7',e:33,dx:'Síndrome femoropatelar',s:[['2 nov',.7,.5,3.6]]}];
+PT.forEach(p=>p.s=p.s.map(([f,d,l,T],i)=>({f,d,l,T,i,n:'Sesión '+(i+1)})));
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function pose(s,u){const e=Math.sin(Math.PI*u),K=Math.pow(e,.9)*s.d*108,th=K*.38*R,ph=(K-K*.38)*R,psi=(6+s.l*K*.55)*R;
+ const ank={x:0,y:0},toe={x:42,y:0},knee={x:Math.sin(th)*100,y:-Math.cos(th)*100},hip={x:knee.x-Math.sin(ph)*105,y:knee.y-Math.cos(ph)*105},
+ sh={x:hip.x+Math.sin(psi)*115,y:hip.y-Math.cos(psi)*115},head={x:sh.x+Math.sin(psi*.6)*32,y:sh.y-Math.cos(psi*.6)*34},b=.4+e,hand={x:sh.x+Math.sin(b)*80,y:sh.y+Math.cos(b)*80};
+ return {ank,toe,knee,hip,sh,head,hand,K,H:(psi+ph)/R,T:psi/R}}
+const curve=(s,f)=>Array.from({length:101},(_,i)=>pose(s,i/100)[f]);
+const mx=a=>Math.max(...a);
+
+/* navegación */
+function go(v){document.querySelectorAll('.v').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));
+ document.querySelectorAll('.nv').forEach(b=>b.toggleAttribute('aria-current',b.dataset.v===v)||0);
+ document.querySelectorAll('.nv').forEach(b=>b.dataset.v===v?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
+ if(location.hash!=='#'+v)location.hash=v; if(v==='comparador')renderCmp()}
+document.querySelectorAll('.nv').forEach(b=>b.onclick=()=>go(b.dataset.v));
+addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(['pacientes','nueva','comparador'].includes(h))go(h)});
+
+/* pacientes */
+let cur=0;
+const ROM=p=>Math.round(p.s[p.s.length-1].d*108);
+function evo(p){if(p.s.length<2)return['Sin comparar',''];const a=p.s[0].d*108,b=p.s[p.s.length-1].d*108,d=Math.round(b-a);return d>=8?['+'+d+'° rodilla','ok']:['Estancado','w']}
+function listP(){const q=$('#q').value.toLowerCase();
+ $('#pt').innerHTML=PT.filter(p=>(p.n+p.r+p.dx).toLowerCase().includes(q)).map(p=>{const[t,c]=evo(p);
+ return `<tr class="pr ${p.id===cur?'sel':''}" data-id="${p.id}" tabindex="0"><td><b>${p.n}</b><small>${p.r} · ${p.e} años</small></td><td class="hm">${p.dx}</td><td>${p.s.length}</td><td><span class="chip ${c}">${t}</span></td></tr>`}).join('')||'<tr><td colspan="4">Sin resultados</td></tr>';
+ document.querySelectorAll('tr.pr').forEach(r=>{const f=()=>{cur=+r.dataset.id;listP();detail()};r.onclick=f;r.onkeydown=e=>{if(e.key==='Enter')f()}})}
+function detail(){const p=PT[cur];
+ $('#pd').innerHTML=`<h2>${p.n}</h2><div class="kv"><span><b>${p.e}</b> años</span><span>${p.r}</span></div><p style="margin:0 0 10px;color:var(--mu)">${p.dx}</p>
+ <canvas id="pc" width="340" height="150" aria-label="Flexión máxima por sesión"></canvas>
+ <div style="margin:10px 0">${p.s.slice().reverse().map(s=>`<div class="sl"><span class="n"><b>${s.n}</b> · ${s.f}</span><span>${Math.round(s.d*108)}°</span></div>`).join('')}</div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="b" id="dc" ${p.s.length<2?'disabled style="opacity:.5"':''}>Comparar sesiones</button><button class="g" id="dn2">Nueva sesión</button></div>`;
+ const c=$('#pc'),g=c.getContext('2d'),w=c.width,h=c.height,n=p.s.length;g.font='12px sans-serif';g.fillStyle=css('--mu');g.strokeStyle=css('--ln');
+ [0,60,120].forEach(v=>{const y=h-22-(h-34)*v/120;g.beginPath();g.moveTo(30,y);g.lineTo(w-8,y);g.stroke();g.fillText(v+'°',2,y+4)});
+ const X=i=>n<2?w/2:40+(w-60)*i/(n-1),Y=v=>h-22-(h-34)*v/120;g.beginPath();p.s.forEach((s,i)=>{const x=X(i),y=Y(s.d*108);i?g.lineTo(x,y):g.moveTo(x,y)});g.strokeStyle=css('--ac');g.lineWidth=2.5;g.stroke();
+ p.s.forEach((s,i)=>{g.beginPath();g.arc(X(i),Y(s.d*108),4.5,0,7);g.fillStyle=css('--ac');g.fill();g.fillStyle=css('--mu');g.fillText(s.f,X(i)-16,h-6)});
+ $('#dc').onclick=()=>{CP=cur;SA=0;SB=p.s.length-1;go('comparador')};
+ $('#dn2').onclick=()=>{$('#np').value=cur;go('nueva')}}
+$('#q').oninput=listP;
+
+/* nueva sesión */
+PT.forEach(p=>$('#np').add(new Option(p.n,p.id)));
+$('#drop').onclick=()=>$('#fi').click();
+$('#drop').onkeydown=e=>{if(e.key==='Enter')$('#fi').click()};
+$('#fi').onchange=e=>{const f=e.target.files[0];if(f){$('#dn').textContent=f.name;$('#ds').textContent=(f.size/1048576).toFixed(1)+' MB · listo para procesar'}};
+['dragover','dragleave','drop'].forEach(ev=>$('#drop').addEventListener(ev,e=>{e.preventDefault();$('#drop').classList.toggle('dz',ev==='dragover');if(ev==='drop'&&e.dataTransfer.files[0]){$('#dn').textContent=e.dataTransfer.files[0].name;$('#ds').textContent='listo para procesar'}}));
+$('#ex').onclick=()=>{$('#dn').textContent='sentadilla_ejemplo.mp4';$('#ds').textContent='1280×720 · 30 fps · 0:03 · listo para procesar'};
+let busy=false;
+$('#go').onclick=()=>{if(busy)return;if($('#dn').textContent.startsWith('Arrastra'))return toast('Primero elige un video o usa el de ejemplo');
+ busy=true;$('#pg').style.display='block';$('#done').style.display='none';const L=[...document.querySelectorAll('#st li')];L.forEach(l=>l.className='');let i=0;
+ const t=setInterval(()=>{if(i>0)L[i-1].className='d';if(i<L.length)L[i].className='c';$('#pb').style.width=Math.min(100,i*25+12)+'%';i++;
+  if(i>L.length){clearInterval(t);$('#pb').style.width='100%';$('#done').style.display='block';busy=false;
+   const p=PT[+$('#np').value];const l=p.s[p.s.length-1];p.s.push({f:'5 nov',d:Math.min(1,l.d+.06),l:Math.max(.3,l.l-.05),T:l.T-.2,i:p.s.length,n:'Sesión '+(p.s.length+1)});cur=p.id;listP();detail();toast('Sesión guardada en el historial de '+p.n)}},900)};
+$('#seeC').onclick=()=>{CP=+$('#np').value;const p=PT[CP];SA=0;SB=p.s.length-1;go('comparador')};
+
+/* comparador */
+let CP=0,SA=0,SB=1,u=0,playing=!matchMedia('(prefers-reduced-motion:reduce)').matches,last=0,mode=1;
+PT.forEach(p=>$('#cp').add(new Option(p.n,p.id)));
+function fillS(){const p=PT[CP];['#sa','#sb'].forEach(id=>{$(id).innerHTML=p.s.map(s=>`<option value="${s.i}">${s.n} · ${s.f}</option>`).join('')});$('#sa').value=SA;$('#sb').value=SB}
+$('#cp').onchange=e=>{CP=+e.target.value;SA=0;SB=Math.max(0,PT[CP].s.length-1);renderCmp()};
+$('#sa').onchange=e=>{SA=+e.target.value;renderCmp()};$('#sb').onchange=e=>{SB=+e.target.value;renderCmp()};
+$('#m1').onclick=()=>setM(1);$('#m2').onclick=()=>setM(2);
+function setM(m){mode=m;$('#m1').setAttribute('aria-pressed',m===1);$('#m2').setAttribute('aria-pressed',m===2)}
+$('#ghost').onchange=()=>{};
+function renderCmp(){$('#cp').value=CP;fillS();const p=PT[CP],a=p.s[SA],b=p.s[SB];
+ const rows=[['Flexión de rodilla máx.','K',1,'°'],['Flexión de cadera máx.','H',1,'°'],['Inclinación del tronco máx.','T',-1,'°'],['Duración de la repetición','',0,' s']];
+ let sm=[];$('#mt').innerHTML=rows.map(([n,f,dir,un])=>{const va=f?mx(curve(a,f)):a.T,vb=f?mx(curve(b,f)):b.T,d=vb-va,pc=Math.abs(d/va)>.05;
+  const good=dir&&pc&&Math.sign(d)===dir,bad=dir&&pc&&Math.sign(d)===-dir;const fm=v=>(un==='°'?Math.round(v):v.toFixed(1))+un;
+  if(f==='K')sm.push(`la flexión de rodilla ${d>=0?'aumentó':'bajó'} ${Math.abs(Math.round(d))}°`);if(f==='T')sm.push(`el tronco se inclina ${Math.abs(Math.round(d))}° ${d>0?'más':'menos'}`);
+  return `<tr><td>${n}</td><td>${fm(va)}</td><td>${fm(vb)}</td><td><span class="chip ${good?'ok':bad?'w':''}">${d>0?'+':''}${un==='°'?Math.round(d):d.toFixed(1)}${un}</span></td></tr>`}).join('');
+ $('#sum').innerHTML=SA===SB?'Elige dos sesiones distintas para comparar.':`<b>Resumen:</b> entre ${a.f} y ${b.f}, ${sm.join(' y ')}.`}
+$('#sv').onclick=()=>toast('Nota guardada en la ficha de '+PT[CP].n);$('#rp').onclick=()=>toast('Informe en PDF generado (demostración)');
+$('#play').onclick=()=>{playing=!playing;$('#play').textContent=playing?'Pausar':'Reproducir'};$('#play').textContent=playing?'Pausar':'Reproducir';
+$('#seek').oninput=e=>{u=e.target.value/1000};
+
+const cv=$('#cmpc'),cx=cv.getContext('2d');
+function limb(a,b,w,c,al=1){cx.globalAlpha=al;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.lineWidth=w;cx.lineCap='round';cx.strokeStyle=c;cx.stroke();cx.globalAlpha=1}
+function fig(p,ox,oy,sc,col){const m=q=>({x:ox+q.x*sc,y:oy+q.y*sc}),P={};for(const k in p)if(typeof p[k]==='object')P[k]=m(p[k]);
+ limb(P.ank,P.knee,22*sc,col,.18);limb(P.knee,P.hip,26*sc,col,.18);limb(P.hip,P.sh,38*sc,col,.18);
+ [['ank','toe'],['ank','knee'],['knee','hip'],['hip','sh'],['sh','head'],['sh','hand']].forEach(([a,b])=>limb(P[a],P[b],4.5,col));
+ ['ank','toe','knee','hip','sh','head','hand'].forEach(k=>{cx.beginPath();cx.arc(P[k].x,P[k].y,5.5,0,7);cx.fillStyle='#fff';cx.fill();cx.lineWidth=2.5;cx.strokeStyle=col;cx.stroke()});return P}
+function frame(){const W=900,H=420,p=PT[CP],a=p.s[SA]||p.s[0],b=p.s[SB]||p.s[0],ca='#5cc3e8',cb='#ff8a63',sc=.88;
+ cx.fillStyle='#0c1a1e';cx.fillRect(0,0,W,H);const ay=H-34;cx.fillStyle='#15282d';cx.fillRect(0,ay+4,W,H);
+ const pa=pose(a,u),pb=pose(b,u);
+ if(mode===1){cx.strokeStyle='rgba(255,255,255,.12)';cx.beginPath();cx.moveTo(W/2,0);cx.lineTo(W/2,H);cx.stroke();
+  fig(pa,W/4-20,ay,sc,ca);fig(pb,3*W/4-20,ay,sc,cb);
+  cx.font='600 15px sans-serif';cx.fillStyle=ca;cx.fillText(a.n+' · '+a.f,18,28);cx.fillStyle=cb;cx.fillText(b.n+' · '+b.f,W/2+18,28);
+  cx.fillStyle='#fff';cx.fillText(Math.round(pa.K)+'°',18,52);cx.fillText(Math.round(pb.K)+'°',W/2+18,52);
+  if($('#ghost').checked){cx.setLineDash([5,5]);cx.strokeStyle='rgba(255,255,255,.35)';[W/4,3*W/4].forEach((x,i)=>{const kx=x-20+(i?pb:pa).knee.x*sc;cx.beginPath();cx.moveTo(kx,40);cx.lineTo(kx,ay);cx.stroke()});cx.setLineDash([])}}
+ else{const ox=W/2-30;const A=fig(pa,ox,ay,1.0,ca),B=fig(pb,ox,ay,1.0,cb);
+  if($('#ghost').checked){cx.setLineDash([5,5]);cx.strokeStyle='#fff';cx.lineWidth=1.5;cx.beginPath();cx.moveTo(A.hip.x,A.hip.y);cx.lineTo(B.hip.x,B.hip.y);cx.stroke();cx.setLineDash([])}
+  cx.font='600 15px sans-serif';cx.fillStyle=ca;cx.fillText('● '+a.n+' · '+a.f,18,28);cx.fillStyle=cb;cx.fillText('● '+b.n+' · '+b.f,18,52)}
+ $('#pct').textContent=Math.round(u*100)+' %';$('#seek').value=u*1000;
+ const c=$('#chart'),g=c.getContext('2d'),w=c.width,h=c.height,L=32,Bm=20;g.clearRect(0,0,w,h);g.font='12px sans-serif';g.fillStyle=css('--mu');g.strokeStyle=css('--ln');g.lineWidth=1;
+ for(let v=0;v<=120;v+=40){const y=h-Bm-(h-Bm-8)*v/120;g.beginPath();g.moveTo(L,y);g.lineTo(w-6,y);g.stroke();g.fillText(v+'°',2,y+4)}
+ const X=i=>L+(w-L-6)*i/100,Y=v=>h-Bm-(h-Bm-8)*v/120;g.fillText('0 %',L,h-5);g.fillText('100 %',w-36,h-5);
+ [[a,css('--A')],[b,css('--B')]].forEach(([s,col])=>{g.beginPath();curve(s,'K').forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));g.lineWidth=2.5;g.strokeStyle=col;g.stroke()});
+ g.strokeStyle=css('--ink');g.lineWidth=1.5;g.beginPath();g.moveTo(X(u*100),8);g.lineTo(X(u*100),h-Bm);g.stroke()}
+function loop(t){const dt=(t-last)/1000;last=t;if(playing)u=(u+dt/3.4)%1;if($('#v-comparador').classList.contains('on'))frame();requestAnimationFrame(loop)}
+listP();detail();go(['pacientes','nueva','comparador'].includes(location.hash.slice(1))?location.hash.slice(1):'pacientes');requestAnimationFrame(loop);
+</script>
+</body>
+</html>
