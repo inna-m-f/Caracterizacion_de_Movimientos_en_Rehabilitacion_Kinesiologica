@@ -6,7 +6,7 @@ Los integrantes del equipo son:
 2. Francisco Gonzalez  - 
 3. Manuel de la Hoz  - 202004064-8
 4. Ignacia Marquez  -
-5. Josefa Zamora  -
+5. Josefa Zamora  -  201903029-9
 
 Objetivo:
 Nuestro objetivo con este proyecto es lograr dar un apoyo al proceso de rehabilitación de los pacientes de los kinesiologos permitiendoles 
