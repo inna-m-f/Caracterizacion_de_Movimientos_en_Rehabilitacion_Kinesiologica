@@ -5,7 +5,7 @@ Los integrantes del equipo son:
 1. Constanza Acosta -  202330019-5
 2. Francisco Gonzalez  - 
 3. Manuel de la Hoz  - 202004064-8
-4. Ignacia Marquez  -
+4. Ignacia Marquez  - 202030015-1
 5. Josefa Zamora  -  201903029-9
 
 Objetivo:
