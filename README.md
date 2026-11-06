@@ -4,7 +4,7 @@ caracterización de movimientos en rehabilitación kinesiológica.
 Los integrantes del equipo son:
 1. Constanza Acosta -  202330019-5
 2. Francisco Gonzalez  - 
-3. Manuel de la Hoz  -
+3. Manuel de la Hoz  - 202004064-8
 4. Ignacia Marquez  -
 5. Josefa Zamora  -
 
