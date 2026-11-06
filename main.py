@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 from m1_adquisicion import cargar_video
 from m2_segmentacion import segmentar_sujeto
-from m3_estimacion_pose import estimar_pose_y_angulo, mp_pose, mp_dibujo
+from m3_pose import estimar_pose_y_angulo, mp_pose, mp_dibujo
 from m4_tracking import TrackerArticular
 from m5_comparador import comparar_ejecuciones
 
