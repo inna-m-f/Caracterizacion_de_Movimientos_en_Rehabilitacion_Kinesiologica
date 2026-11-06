@@ -4,7 +4,7 @@ M1 - Adquisición y carga de video (KinePose)
 Funciones clave (según Documento de Análisis y Diseño, sección 5.1):
     cargar_video(filepath)              -> dict con metadatos o ValueError (R_VideoInvalido)
     verificar_protocolo_captura(info)   -> dict con el estado de cada condición del protocolo
-    extraer_cuadros_rgb(filepath, ...)  -> generador de cuadros RGB (np.ndarray HxWx3, uint8)
+    extraer_cuadros_rgb(filepath, ...)  -> generador de cuadros en los canales RGB (np.ndarray HxWx3, uint8)
 """
 from __future__ import annotations
 
